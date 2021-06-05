@@ -26,7 +26,7 @@ typedef struct {
 Line lines[LINES_SIZE];
 
 double X3, X4, Xr, Yr;
-//double main_arr[30][8];
+double main_arr[30][8];
 double initial_position_for_next_thing[3];
 double buf = 0;
 double ip_arr[29];
@@ -809,7 +809,7 @@ int main() {
 
 
 	///                0123456789 123456789 12345678
-	fill_main_arr("l5 a180 r2.5 l3.5 a90 l10 a190");//figure shape 
+	fill_main_arr("l5a180r2.5l3.5a90l10a190");//figure shape 
 	fill_begins_and_ends(number_of_func);//dont change
 	fill_ip_array(number_of_func);//dont change
 
