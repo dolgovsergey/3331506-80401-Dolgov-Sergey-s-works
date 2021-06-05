@@ -1,7 +1,7 @@
 #include "mcu_support_package/inc/stm32f10x.h"
 
 
-   
+#include <stdbool.h>   
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -26,7 +26,7 @@ typedef struct {
 Line lines[LINES_SIZE];
 
 double X3, X4, Xr, Yr;
-double main_arr[30][8];
+//double main_arr[30][8];
 double initial_position_for_next_thing[3];
 double buf = 0;
 double ip_arr[29];
@@ -63,7 +63,7 @@ int intersection_check(double x, double y);
 
 void fill_main_arr(char str[]);
 
-int is_number(char sym);
+bool is_number(char sym);
 
 int find_end_pos(char str[], int beg_pos);
 
@@ -163,89 +163,27 @@ int strlenfix(char str[]) {
     return res;
 }// no needed though can be / finds length of string of numbers (basically the same as find end pos)
 
-int is_number(char sym) {
-    int res = 0;
+// returns 0 or 1 (not boolean because I want so) based on symbool checking accodig to list of acceptable ones
+bool is_number(char sym) {
     switch (sym) {
-        case '0':
-            res = 1;
-            break;
-        case '1':
-            res = 1;
-            break;
-        case '2':
-            res = 1;
-            break;
-        case '3':
-            res = 1;
-            break;
-        case '4':
-            res = 1;
-            break;
-        case '5':
-            res = 1;
-            break;
-        case '6':
-            res = 1;
-            break;
-        case '7':
-            res = 1;
-            break;
-        case '8':
-            res = 1;
-            break;
-        case '9':
-            res = 1;
-            break;
+
+          
         case '-':
-            res = 1;
-            break;
+          return true;
         case '.':
-            res = 1;
-            break;
+          return true;
         case ',':
-            res = 1;
-            break;
+          return true;
 
-
+        default:
+					return isdigit(sym);
     }
-    return res;
-}// returns 0 or 1 (not boolean because I want so) based on symbool checking accodig to list of acceptable ones
+   
+}
 
 double char_sym_to_double_sym(char sym) {
-    double res = 0;
-    switch (sym) {
-        case '0' :
-            res = 0;
-            break;
-        case '1' :
-            res = 1;
-            break;
-        case '2' :
-            res = 2;
-            break;
-        case '3' :
-            res = 3;
-            break;
-        case '4' :
-            res = 4;
-            break;
-        case '5' :
-            res = 5;
-            break;
-        case '6' :
-            res = 6;
-            break;
-        case '7' :
-            res = 7;
-            break;
-        case '8' :
-            res = 8;
-            break;
-        case '9' :
-            res = 9;
-            break;
-    }
-    return res;
+	return sym-'0'; //вычитая код "0" мы получаем порядковый номер для цифры, который приводится к int 
+    
 }//needed in char to double function / onely numbers , no signs or smth else
 
 double char_to_double(char str[], int length) {
@@ -422,9 +360,11 @@ void fill_main_arr(char str[]) {/// filling main arr, types arr, counting number
                 i++;
                 beg_pos = i;
                 end_pos = find_end_pos(str, beg_pos);
-                main_arr[current_line][3] = paste_number_from_str(str, beg_pos, end_pos - beg_pos);
+                main_arr[current_line][3] = paste_number_from_str(str, beg_pos, end_pos - beg_pos); //scanf() /atof() /strtof()
                 i = end_pos;
-                types_arr[current_line] = 1;
+              //  types_arr[current_line] = 1;
+							lines[current_line].type = line;
+							#error так же для остальных
                 if (str[i] == 'a') {
                     i++;
                     beg_pos = i;
@@ -809,7 +749,7 @@ int main() {
 
 
 	///                0123456789 123456789 12345678
-	fill_main_arr("l5a180r2.5l3.5a90l10a190");//figure shape 
+	fill_main_arr("l5 a180 r2.5 l3.5 a90 l10 a190");//figure shape 
 	fill_begins_and_ends(number_of_func);//dont change
 	fill_ip_array(number_of_func);//dont change
 
