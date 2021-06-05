@@ -1,0 +1,43 @@
+version: 2.1
+
+general:
+  branches:
+    only:
+      - master
+
+workflows:
+  my-workflow:
+    jobs:
+      - build:
+          context:
+            - global
+            
+jobs:
+  build:
+    docker:
+      - image: docker.pkg.github.com/spbstu-microprocessors/docker_images/ubuntu_pvs:0.2
+        auth:
+          username: roman-khazanskii
+          password: $PACKAGES_TOKEN
+    steps:
+      - checkout
+      - run:
+          name: Compile with gcc
+          when: always
+          command: chmod +x .test/compile_tests.sh  && .test/compile_tests.sh 
+          no_output_timeout: 2m
+      - run:      
+          name: PVS Studio check
+          when: always
+          command: chmod +x .test/pvs_check.sh && .test/pvs_check.sh
+          no_output_timeout: 2m
+      - run:
+          name: Run tests
+          when: always
+          command: chmod +x .test/run_tests.sh  && .test/run_tests.sh 
+          no_output_timeout: 2m
+      - run:
+          name: Check due date
+          when: always
+          command: chmod +x .test/date_checker.sh && .test/date_checker.sh
+          no_output_timeout: 1m
